@@ -1,0 +1,12 @@
+numpy
+pandas
+scikit-learn
+torch
+joblib
+matplotlib
+seaborn
+yfinance
+streamlit
+pytest
+tqdm
+kagglehub[pandas-datasets]
