@@ -27,3 +27,4 @@ def validate_split(no_duplicates_df: pd.DataFrame,train_df: pd.DataFrame, val_df
         + len(test_df)
         == len(no_duplicates_df)
     )
+
