@@ -33,8 +33,8 @@ def main() -> None:
     )
 
     val_dataset = FinancialNewsDataset(
-            texts=train_df["text"],
-            labels=train_df["sentiment"],
+            texts=val_df["text"],
+            labels=val_df["sentiment"],
             vocabulary=val_vocabulary,
             max_length=64,
     )
