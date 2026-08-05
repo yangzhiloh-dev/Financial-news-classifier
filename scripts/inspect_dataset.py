@@ -15,27 +15,22 @@ def main() -> None:
         PROCESSED_DIR / "sentiment_data_val.csv"
     )
 
-    train_vocabulary = Vocabulary.build(
+    vocabulary = Vocabulary.build(
         texts=train_df["text"],
-        min_freq=2,
-    )
-
-    val_vocabulary = Vocabulary.build(
-        texts=val_df["text"],
         min_freq=2,
     )
 
     train_dataset = FinancialNewsDataset(
         texts=train_df["text"],
         labels=train_df["sentiment"],
-        vocabulary=train_vocabulary,
+        vocabulary=vocabulary,
         max_length=64,
     )
 
     val_dataset = FinancialNewsDataset(
             texts=val_df["text"],
             labels=val_df["sentiment"],
-            vocabulary=val_vocabulary,
+            vocabulary=vocabulary,
             max_length=64,
     )
 
@@ -48,7 +43,7 @@ def main() -> None:
     val_loader = DataLoader(
             val_dataset,
             batch_size=32,
-            shuffle=True,
+            shuffle=False,
     )
 
     train_batch = next(iter(train_loader))
@@ -56,7 +51,7 @@ def main() -> None:
 
     print("Training dataset:")
     print("Training examples:", len(train_dataset))
-    print("Vocabulary size:", len(train_vocabulary))
+    print("Vocabulary size:", len(vocabulary))
     print("Number of batches:", len(train_loader))
 
     print("Input shape:", train_batch["input_ids"].shape)
@@ -65,7 +60,7 @@ def main() -> None:
 
     print("Validation dataset:")
     print("Validation examples:", len(val_dataset))
-    print("Vocabulary size:", len(val_vocabulary))
+    print("Vocabulary size:", len(vocabulary))
     print("Number of batches:", len(val_loader))
     
     print("Input shape:", val_batch["input_ids"].shape)
