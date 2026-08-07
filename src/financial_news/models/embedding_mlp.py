@@ -6,13 +6,22 @@ def masked_mean_pool(token_embeddings: torch.Tensor, attention_mask: torch.Tenso
     Reduces token_embeddings into one document vector, reducing it by one dimension
     """
 
-    assert ( token_embeddings.dim == 3 
-            and attention_mask.dim == 2 
-            )
+    if token_embeddings.ndim != 3:
+        raise ValueError(
+            "token_embeddings must have shape "
+            "[batch, sequence, embedding]."
+        )
 
-    assert ( token_embeddings.shape[0] == attention_mask[0] 
-            and token_embeddings.shape[1] == attention_mask.shape[1] 
-            )
+    if attention_mask.ndim != 2:
+        raise ValueError(
+            "attention_mask must have shape "
+            "[batch, sequence]."
+        )
+
+    if token_embeddings.shape[:2] != attention_mask.shape:
+        raise ValueError(
+            "The batch and sequence dimensions must match."
+        )
 
     expanded_mask = attention_mask.unsqueeze(-1).to(token_embeddings.dtype)
     masked_embeddings = expanded_mask * token_embeddings
@@ -41,16 +50,16 @@ class EmbeddingAverageMLP(nn.Module):
     ) -> None:
         super().__init__()
 
-        if not vocabulary_size <= 2:
+        if vocabulary_size <= 2:
             raise ValueError("vocabulary size must be greater than 2 to include padding and unknown tokens")
 
-        if not embedding_dimension < 1:
+        if embedding_dimension < 1:
             raise ValueError("Embedding dimension must be a positive number")
 
-        if not hidden_dimension < 1:
+        if hidden_dimension < 1:
             raise ValueError("hidden dimension must be a positive number")
 
-        if not num_of_classes < 2:
+        if num_of_classes < 2:
             raise ValueError("Number of classes must be at least 2")
 
         if not 0 <= dropout_probability < 1:
